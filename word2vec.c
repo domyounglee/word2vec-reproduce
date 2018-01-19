@@ -472,9 +472,9 @@ void *TrainModelThread(void *id) {
         if (word == 0) break; // <\s> 즉 엔터이면 break 왜냐하면 다른 글이기 때문이다.  
         // The subsampling randomly discards frequent words while keeping the ranking same
         if (sample > 0) {
-          real ran = (sqrt(vocab[word].cn / (sample * train_words)) + 1) * (sample * train_words) / vocab[word].cn;
-          next_random = next_random * (unsigned long long)25214903917 + 11;
-          if (ran < (next_random & 0xFFFF) / (real)65536) continue;
+          real ran = (sqrt(vocab[word].cn / (sample * train_words)) + 1) * (sample * train_words) / vocab[word].cn; //ran produces some number which is a function of the frequency of a word in the processed text, and train_words the total number of tokens (previously smoothed by an alpha term, but let's ignore this).
+          next_random = next_random * (unsigned long long)25214903917 + 11; //next_random is assigned a value by a function which looks like a Linear Congruential Generator. I am getting this information from here: 
+          if (ran < (next_random & 0xFFFF) / (real)65536) continue; //next_random is masked to keep only the lowest 16 bits unchanged. So I now have a binary number with max (decimal) value 65535. Divided by 65536, this gives me a number between 0 and 1, The hexadecimal notation 0xffff makes it clear that all bits in the number are 1. The 65535 is the same number
         }
         sen[sentence_length] = word;
         sentence_length++;
