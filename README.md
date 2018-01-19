@@ -8,7 +8,7 @@ reproduced myself
 -	word2vec_thread.py : used thread (debugging required)
 -	evalutation.ipynb : evaluation 
 -	make_voca : generates only vocabulary
-materials & plot
+
 
 ## reference 
 
