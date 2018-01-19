@@ -1,10 +1,11 @@
 # word2vec-reproduce (in python)
 ## code
-commented myself in korean & english \n
-	word2vec.c \n
-reproduced myself \n
-	word2vec.py \n
-	word2vec_thread.py \n
+commented myself in korean & english 
+-word2vec.c 
+
+reproduced myself 
+-	word2vec.py 
+-	word2vec_thread.py 
 
 ## reference 
 
