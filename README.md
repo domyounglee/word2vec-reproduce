@@ -1,6 +1,6 @@
 # word2vec-reproduce (python으로 날로 짠 word2vec)
 ## code
-commented myself in korean & english 
+commented myself the original word2vec code in korean & english 
 -	word2vec.c 
 
 reproduced myself 
