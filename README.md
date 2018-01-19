@@ -1,11 +1,14 @@
-# word2vec-reproduce (in python)
+# word2vec-reproduce (python으로 날로 짠 word2vec)
 ## code
 commented myself in korean & english 
--word2vec.c 
+-	word2vec.c 
 
 reproduced myself 
 -	word2vec.py 
--	word2vec_thread.py 
+-	word2vec_thread.py : used thread (debugging required)
+-	evalutation.ipynb : evaluation 
+-	make_voca : generates only vocabulary
+materials & plot
 
 ## reference 
 
