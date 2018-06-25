@@ -59,6 +59,7 @@ void InitUnigramTable() {
     fprintf(stderr, "cannot allocate memory for the table\n");
     exit(1);
   }
+  //Normalization
   for (a = 0; a < vocab_size; a++) train_words_pow += pow(vocab[a].cn, power);
   i = 0;
   d1 = pow(vocab[i].cn, power) / (real)train_words_pow;
@@ -80,11 +81,11 @@ void ReadWord(char *word, FILE *fin) {
     if (ch == 13) continue;//carriage return
     if ((ch == ' ') || (ch == '\t') || (ch == '\n')) {
       if (a > 0) {
-        if (ch == '\n') ungetc(ch, fin); //passing 배y '\n'
+        if (ch == '\n') ungetc(ch, fin); // pop up '\n' 
         break;
       }
       if (ch == '\n') {// if it starts with \n from the beginning
-        strcpy(word, (char *)"</s>"); // 엔터면 그거저장한다. vocab[0] 에 있음 
+        strcpy(word, (char *)"</s>"); // 엔터면 </s> 저장한다. vocab[0] 에 있음 
         return;
       } else continue;
     }
@@ -103,7 +104,8 @@ int GetWordHash(char *word) {
   return hash;
 }
 
-// Returns position of a word(index) in the vocabulary; if the word is not found, returns -1
+// Returns position of a word(index) in the vocabulary; if the word is not found, returns -1 , 
+//Use open addressing method 
 int SearchVocab(char *word) {
   unsigned int hash = GetWordHash(word);
   while (1) {
@@ -250,7 +252,7 @@ void CreateBinaryTree() {
         min1i = pos2;
         pos2++;
       }
-    } else {  //count 가 엄청 큰 숫자만 있을땐 이경우 있을 수 있음 전체를 두개씩 쌍으로 짝짓겠다는 뜻임
+    } else {  //count 가 엄청 큰 숫자만 있을땐 이경우 있을 수 있음 leaf node 전체를 두개씩 쌍으로 짝짓겠다는 뜻임
       min1i = pos2;
       pos2++;
     }
@@ -281,7 +283,7 @@ void CreateBinaryTree() {
   {
     b = a; // "b" is used to find its father, starting from itself
     i = 0; // "i" is for counting the number of its ancestors, namely the length of its code
-    //find all ancestors by down-up style
+    //find all ancestors by bottom-up style
     while (1)
     {
       code[i] = binary[b];
@@ -306,6 +308,7 @@ void CreateBinaryTree() {
   free(binary);
   free(parent_node);
 }
+
 
 //vocabulary 만든다. 
 void LearnVocabFromTrainFile() {
