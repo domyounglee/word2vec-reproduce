@@ -485,6 +485,8 @@ void *TrainModelThread(void *id) {
       }
       sentence_position = 0;
     }
+    
+
     if (feof(fi) || (word_count > train_words / num_threads)) {
       word_count_actual += word_count - last_word_count;
       local_iter--; 
@@ -504,14 +506,14 @@ void *TrainModelThread(void *id) {
     for (c = 0; c < layer1_size; c++) neu1[c] = 0;
     for (c = 0; c < layer1_size; c++) neu1e[c] = 0;
     next_random = next_random * (unsigned long long)25214903917 + 11; 
-    b = next_random % window;  // b에 의해 target word의 window 앞에둘지 뒤에둘지 중간에둘지 정한다 램덤하게 
-    //평균내지 않고 그냥 합친거 
+    b = next_random % window;  // b is dynamic window size 
+    //context words 평균내지 않고 그냥 합친거 version
     //train the cbow architecture
     //cbow 와 skip gram 의 차이는 hs or negative를 indent 하느냐 안하느냐 로 구분할 수 있다. 
     if (cbow) {  
       // in -> hidden
       //namely sum all the embedding of context words by element-wise style, produce the information of hidden layer "neul[]"
-      // windowsize 5 일때 b=1이면 456 , b=4이면  123456789   '5'는 target word 자리이다. 
+      // windowsize 5 일때 b=1이면 123456789 , b=4이면  456   '5'는 target word 자리이다. 
 
       for (a = b; a < window * 2 + 1 - b; a++) if (a != window) {//a 가 window이면 target word이므로 trainning할때 포함시키면안됨 
         c = sentence_position - window + a;
@@ -537,9 +539,9 @@ void *TrainModelThread(void *id) {
         // 'g' is the gradient multiplied by the learning rate ..'g' is the error 
         //code 0 or code 1 이면 sigmoid 값이 1 이되도록 훈련시킬것인데 코드에따라 값이 다르므로 0일땐 simil 이 + 쪽으로가게끔 1일땐 - 쪽으로가게끔 트레이닝 시킨다. 
         g = (1 - vocab[word].code[d] - f) * alpha;
-        // Propagate errors output -> hidden
+        // save delta for the next layer backpropagation 
         for (c = 0; c < layer1_size; c++) neu1e[c] += g * syn1[c + l2];
-        // Learn weights hidden -> output
+        // Learn weights of output
         for (c = 0; c < layer1_size; c++) syn1[c + l2] += g * neu1[c];
       }
 
